@@ -2,12 +2,11 @@
     "name": "Mi Controlador Financiero",
     "short_name": "ControladorFinanzas",
     "description": "Aplicación para gestionar tus ingresos, gastos, ahorros y fondo de emergencia",
-    "start_url": "/controlador-financiero/index.html",
+    "start_url": "index.html",
     "display": "standalone",
     "background_color": "#4361ee",
     "theme_color": "#4361ee",
     "orientation": "portrait",
-    "scope": "/controlador-financiero/",
     "lang": "es",
     "icons": [
     {
