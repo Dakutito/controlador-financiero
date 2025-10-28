@@ -6,29 +6,6 @@
     <title>Mi Controlador Financiero</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css">
-    <!-- Meta tags para PWA -->
-    <meta name="theme-color" content="#4361ee">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Controlador Financiero">
-    <meta name="description" content="Gestiona tus ingresos, gastos, ahorros y fondo de emergencia">
-    <!-- Icons para PWA -->
-    <link rel="icon" type="image/png" href="img/portada.png">
-    <link rel="apple-touch-icon" href="img/portada.png">
-    <link rel="manifest" href="manifest.json">
-    <title>Mi Controlador Financiero</title>
-    <!-- Chart.js desde CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Meta tags para PWA -->
-    <meta name="theme-color" content="#4361ee">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Controlador Financiero">
-    <meta name="description" content="Gestiona tus ingresos, gastos, ahorros y fondo de emergencia">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <!-- Icons para diferentes plataformas -->
-    <link rel="icon" type="img/portada.png" href="img/portada.png">
-    <link rel="apple-touch-icon" href="img/portada.png">
     <link rel="manifest" href="manifest.json">
 </head>
 
@@ -156,76 +133,12 @@
         </footer>
     </div>
 
-    <script src="code.js"></script>
-
-    <!-- Script para PWA -->
-    <script>
-        // Registrar Service Worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('sw.js')
-                    .then(function(registration) {
-                        console.log('Service Worker registrado con éxito:', registration.scope);
-                    })
-                    .catch(function(error) {
-                        console.log('Error al registrar Service Worker:', error);
-                    });
-            });
-        }
-
-        // Detectar si la app se está ejecutando como PWA
-        function isRunningAsPWA() {
-            return window.matchMedia('(display-mode: standalone)').matches || 
-                   window.navigator.standalone === true;
-        }
-
-        // Mostrar mensaje si se instala como PWA
-        if (isRunningAsPWA()) {
-            console.log('La aplicación se está ejecutando como PWA');
-        }
-
-        // Evento para instalar la PWA
-        let deferredPrompt;
-        const installButton = document.createElement('button');
-        
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            
-            // Mostrar botón de instalación (opcional)
-            installButton.textContent = '📱 Instalar App';
-            installButton.style.position = 'fixed';
-            installButton.style.bottom = '20px';
-            installButton.style.right = '20px';
-            installButton.style.zIndex = '1000';
-            installButton.style.padding = '10px 15px';
-            installButton.style.background = '#4361ee';
-            installButton.style.color = 'white';
-            installButton.style.border = 'none';
-            installButton.style.borderRadius = '5px';
-            installButton.style.cursor = 'pointer';
-            installButton.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
-            
-            document.body.appendChild(installButton);
-            
-            installButton.addEventListener('click', async () => {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    console.log('Usuario aceptó instalar la PWA');
-                    installButton.style.display = 'none';
-                }
-                deferredPrompt = null;
-            });
-        });
-
-        window.addEventListener('appinstalled', () => {
-            console.log('PWA instalada');
-            if (installButton.parentNode) {
-                installButton.parentNode.removeChild(installButton);
-            }
-            deferredPrompt = null;
-        });
+        <script src="code.js">
+        if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js")
+        .then(reg => console.log("Service Worker registrado:", reg))
+        .catch(err => console.log("Error en Service Worker:", err));
+}
     </script>
 </body>
 </html>
