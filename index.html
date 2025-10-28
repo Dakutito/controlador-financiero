@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Controlador Financiero</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <!-- Meta tags para PWA -->
+    <meta name="theme-color" content="#4361ee">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Controlador Financiero">
+    <meta name="description" content="Gestiona tus ingresos, gastos, ahorros y fondo de emergencia">
+    <!-- Icons para PWA -->
+    <link rel="icon" type="image/png" href="img/portada.png">
+    <link rel="apple-touch-icon" href="img/portada.png">
+    <link rel="manifest" href="manifest.json">
+    <title>Mi Controlador Financiero</title>
+    <!-- Chart.js desde CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Meta tags para PWA -->
+    <meta name="theme-color" content="#4361ee">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Controlador Financiero">
+    <meta name="description" content="Gestiona tus ingresos, gastos, ahorros y fondo de emergencia">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <!-- Icons para diferentes plataformas -->
+    <link rel="icon" type="img/portada.png" href="img/portada.png">
+    <link rel="apple-touch-icon" href="img/portada.png">
+    <link rel="manifest" href="manifest.json">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Mi Controlador Financiero</h1>
+            <p class="subtitle">Gestiona tus ingresos, gastos, ahorros y fondo de emergencia</p>
+        </header>
+        
+        <!-- Menú de navegación -->
+        <nav class="nav-menu">
+            <div class="nav-item active" data-target="distribution">Distribución de tus Finanzas</div>
+            <div class="nav-item" data-target="chart">Gráfica</div>
+            <div class="nav-item" data-target="view">Ver</div>
+            <div class="nav-item" data-target="history">Historial</div>
+        </nav>
+        
+        <!-- SECCIÓN 1: DISTRIBUCIÓN DE TUS FINANZAS -->
+        <section id="distribution" class="section active">
+            <h2 class="section-title">💰 Distribución de tus Finanzas</h2>
+            <div class="money-grid">
+                <div class="money-card income">
+                    <h3>Ingresos</h3>
+                    <div class="input-group">
+                        <label for="income">Total de Ingresos ($)</label>
+                        <input type="number" id="income" placeholder="Ej: 1500">
+                    </div>
+                    <button id="updateIncome">Actualizar Ingresos</button>
+                </div>
+                
+                <div class="money-card expenses">
+                    <h3>Gastos</h3>
+                    <div class="expense-form">
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label for="expenseName">Nombre del gasto</label>
+                                <input type="text" id="expenseName" placeholder="Ej: Comida, Transporte">
+                            </div>
+                            <div class="input-group">
+                                <label for="expenseAmount">Monto ($)</label>
+                                <input type="number" id="expenseAmount" placeholder="Ej: 50">
+                            </div>
+                            <div class="input-group">
+                                <label for="expenseDate">Fecha (opcional)</label>
+                                <input type="date" id="expenseDate">
+                            </div>
+                            <button id="addExpense">Agregar Gasto</button>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="expenses">Total de Gastos ($)</label>
+                        <input type="number" id="expenses" placeholder="0" readonly>
+                    </div>
+                    <button id="updateExpenses">Actualizar Gastos</button>
+                </div>
+                
+                <div class="money-card savings">
+                    <h3>Ahorros</h3>
+                    <div class="input-group">
+                        <label for="savings">Total de Ahorros ($)</label>
+                        <input type="number" id="savings" placeholder="Ej: 300">
+                    </div>
+                    <button id="updateSavings">Actualizar Ahorros</button>
+                </div>
+                
+                <div class="money-card emergency">
+                    <h3>Fondo de Emergencia</h3>
+                    <div class="input-group">
+                        <label for="emergency">Fondo de Emergencia ($)</label>
+                        <input type="number" id="emergency" placeholder="Ej: 500">
+                    </div>
+                    <button id="updateEmergency">Actualizar Fondo</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- SECCIÓN 2: GRÁFICA -->
+        <section id="chart" class="section">
+            <h2 class="section-title">📊 Gráfica</h2>
+            <div class="chart-container">
+                <canvas id="financeChart"></canvas>
+            </div>
+            <div class="controls">
+                <button id="updateChart">Actualizar Gráfica</button>
+                <button id="updateAll">Actualizar Todo</button>
+            </div>
+        </section>
+        
+        <!-- SECCIÓN 3: VER -->
+        <section id="view" class="section">
+            <h2 class="section-title">📈 Resumen Financiero</h2>
+            <div class="summary-grid">
+                <div class="summary-card income">
+                    <h3>Ingresos Totales</h3>
+                    <div class="amount" id="totalIncome">$0</div>
+                </div>
+                <div class="summary-card expenses">
+                    <h3>Gastos Totales</h3>
+                    <div class="amount" id="totalExpenses">$0</div>
+                </div>
+                <div class="summary-card savings">
+                    <h3>Ahorros Totales</h3>
+                    <div class="amount" id="totalSavings">$0</div>
+                </div>
+                <div class="summary-card emergency">
+                    <h3>Fondo de Emergencia</h3>
+                    <div class="amount" id="totalEmergency">$0</div>
+                </div>
+            </div>
+            
+            <button class="reset-btn" id="resetData">Reiniciar Todos los Datos</button>
+        </section>
+        
+        <!-- SECCIÓN 4: HISTORIAL -->
+        <section id="history" class="section">
+            <h2 class="section-title">📋 Historial de Gastos</h2>
+            <div class="history-container" id="historyContainer">
+                <!-- Los elementos del historial se agregarán aquí dinámicamente -->
+            </div>
+        </section>
+        
+        <footer>
+            <p>Controla tus finanzas y construye tu futuro financiero | Desarrollado para ti</p>
+        </footer>
+    </div>
+
+    <script src="code.js"></script>
+
+    <!-- Script para PWA -->
+    <script>
+        // Registrar Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('sw.js')
+                    .then(function(registration) {
+                        console.log('Service Worker registrado con éxito:', registration.scope);
+                    })
+                    .catch(function(error) {
+                        console.log('Error al registrar Service Worker:', error);
+                    });
+            });
+        }
+
+        // Detectar si la app se está ejecutando como PWA
+        function isRunningAsPWA() {
+            return window.matchMedia('(display-mode: standalone)').matches || 
+                   window.navigator.standalone === true;
+        }
+
+        // Mostrar mensaje si se instala como PWA
+        if (isRunningAsPWA()) {
+            console.log('La aplicación se está ejecutando como PWA');
+        }
+
+        // Evento para instalar la PWA
+        let deferredPrompt;
+        const installButton = document.createElement('button');
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Mostrar botón de instalación (opcional)
+            installButton.textContent = '📱 Instalar App';
+            installButton.style.position = 'fixed';
+            installButton.style.bottom = '20px';
+            installButton.style.right = '20px';
+            installButton.style.zIndex = '1000';
+            installButton.style.padding = '10px 15px';
+            installButton.style.background = '#4361ee';
+            installButton.style.color = 'white';
+            installButton.style.border = 'none';
+            installButton.style.borderRadius = '5px';
+            installButton.style.cursor = 'pointer';
+            installButton.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+            
+            document.body.appendChild(installButton);
+            
+            installButton.addEventListener('click', async () => {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('Usuario aceptó instalar la PWA');
+                    installButton.style.display = 'none';
+                }
+                deferredPrompt = null;
+            });
+        });
+
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA instalada');
+            if (installButton.parentNode) {
+                installButton.parentNode.removeChild(installButton);
+            }
+            deferredPrompt = null;
+        });
+    </script>
+</body>
+</html>
