@@ -9,6 +9,82 @@
         // Historial de gastos
         let expenseHistory = [];
 
+        /* --- ALERTAS / CONFIRMACIONES PERSONALIZADAS --- */
+        // Mostrar un modal tipo alerta con un botón Aceptar
+        function showAlert(message) {
+            const backdrop = document.getElementById('custom-modal');
+            const msg = document.getElementById('modalMessage');
+            const ok = document.getElementById('modalOk');
+            const cancel = document.getElementById('modalCancel');
+
+            if (!backdrop || !msg || !ok || !cancel) return Promise.resolve();
+
+            msg.textContent = message;
+            cancel.style.display = 'none';
+            backdrop.classList.add('show');
+
+            return new Promise(resolve => {
+                function onOk() {
+                    ok.removeEventListener('click', onOk);
+                    backdrop.classList.remove('show');
+                    resolve();
+                }
+
+                ok.addEventListener('click', onOk);
+            });
+        }
+
+        // Mostrar confirmación con botones Aceptar/Cancelar -> devuelve Promise<boolean>
+        function showConfirm(message) {
+            const backdrop = document.getElementById('custom-modal');
+            const msg = document.getElementById('modalMessage');
+            const ok = document.getElementById('modalOk');
+            const cancel = document.getElementById('modalCancel');
+
+            if (!backdrop || !msg || !ok || !cancel) return Promise.resolve(false);
+
+            msg.textContent = message;
+            cancel.style.display = '';
+            backdrop.classList.add('show');
+
+            return new Promise(resolve => {
+                function onOk() {
+                    cleanup();
+                    resolve(true);
+                }
+
+                function onCancel() {
+                    cleanup();
+                    resolve(false);
+                }
+
+                function cleanup() {
+                    ok.removeEventListener('click', onOk);
+                    cancel.removeEventListener('click', onCancel);
+                    backdrop.classList.remove('show');
+                }
+
+                ok.addEventListener('click', onOk);
+                cancel.addEventListener('click', onCancel);
+            });
+        }
+
+        // Toast simple (mensaje corto que desaparece)
+        function showToast(message, duration = 1800) {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(6px)';
+                setTimeout(() => container.removeChild(toast), 240);
+            }, duration);
+        }
+
         // Cargar datos desde localStorage si existen
         function loadData() {
             const savedData = localStorage.getItem('financialData');
@@ -138,20 +214,22 @@
 
         // Eliminar un gasto del historial
         function deleteExpense(index) {
-            if (confirm('¿Estás seguro de que quieres eliminar este gasto?')) {
+            showConfirm('¿Estás seguro de que quieres eliminar este gasto?').then(confirmed => {
+                if (!confirmed) return;
+
                 // Restar el monto del gasto eliminado del total
                 financialData.expenses -= expenseHistory[index].amount;
-                
+
                 // Eliminar el gasto del historial
                 expenseHistory.splice(index, 1);
-                
+
                 // Actualizar datos y vistas
                 saveData();
                 updateInputs();
                 updateChart();
                 updateSummary();
                 updateHistory(); // Actualizar el historial inmediatamente
-            }
+            });
         }
 
         // Configuración del gráfico
@@ -258,12 +336,12 @@
             const date = document.getElementById('expenseDate').value;
             
             if (!name) {
-                alert('Por favor, ingresa un nombre para el gasto');
+                showAlert('Por favor, ingresa un nombre para el gasto');
                 return;
             }
             
             if (amount <= 0) {
-                alert('Por favor, ingresa un monto válido para el gasto');
+                showAlert('Por favor, ingresa un monto válido para el gasto');
                 return;
             }
             
@@ -289,7 +367,8 @@
             updateSummary();
             updateHistory(); // Actualizar el historial inmediatamente
             
-            alert('Gasto agregado correctamente');
+            // Mensaje de éxito breve
+            showToast('Gasto agregado correctamente');
         }
 
         function updateAll() {
@@ -297,26 +376,28 @@
             updateExpenses();
             updateSavings();
             updateEmergency();
-            alert('¡Todos los datos han sido actualizados!');
+            showToast('¡Todos los datos han sido actualizados!');
         }
 
         function resetData() {
-            if (confirm('¿Estás seguro de que quieres reiniciar todos los datos? Esto eliminará también el historial de gastos.')) {
+            showConfirm('¿Estás seguro de que quieres reiniciar todos los datos? Esto eliminará también el historial de gastos.').then(confirmed => {
+                if (!confirmed) return;
+
                 financialData = {
                     income: 0,
                     expenses: 0,
                     savings: 0,
                     emergency: 0
                 };
-                
+
                 expenseHistory = [];
-                
+
                 saveData();
                 updateInputs();
                 updateChart();
                 updateSummary();
                 updateHistory(); // Actualizar el historial inmediatamente
-            }
+            });
         }
 
         // Navegación entre secciones
