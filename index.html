@@ -133,12 +133,28 @@
         </footer>
     </div>
 
-        <script src="code.js">
-if ("sw" in navigator) {
+    <script src="code.js">
+        if ("sw" in navigator) {
     navigator.serviceWorker.register("sw.js")
         .then(reg => console.log("sw registrado:", reg))
         .catch(err => console.log("Error en Service Worker:", err));
 }
     </script>
+    <!-- Contenedor para alertas/confirmaciones personalizadas -->
+    <div id="app-modals">
+        <div id="custom-modal" class="modal-backdrop" aria-hidden="true">
+            <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalMessage">
+                <div class="modal-content">
+                    <div id="modalMessage" class="modal-message"></div>
+                    <div class="modal-buttons">
+                        <button id="modalCancel" class="btn btn-secondary">Cancelar</button>
+                        <button id="modalOk" class="btn btn-primary">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Contenedor para toasts rápidos -->
+        <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+    </div>
 </body>
 </html>
